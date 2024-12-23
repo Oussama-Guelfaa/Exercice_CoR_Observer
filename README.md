@@ -27,23 +27,7 @@ Ce projet vise à implémenter deux patrons de conception (\emph{Design Patterns
 
 Le projet est organisé de la manière suivante :
 
-```
-.
-├── src
-│   ├── FileLogger.java
-│   ├── WebServer.java
-│   ├── WebServerInterface.java
-│   ├── WebServerProxy.java
-│   ├── Main.java
-│   ├── RequestHandler.java
-│   ├── ExistingContentCheckRequestHandler.java
-│   ├── PolicyCheckRequestHandler.java
-│   ├── RenderContentHandler.java
-│   ├── WebRequest.java
-│   └── User.java
-├── logs.txt
-└── README.md
-```
+
 
 - FileLogger.java : Classe responsable du logging des requêtes.
 - WebServer.java : Implémentation principale du serveur web.
