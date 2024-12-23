@@ -56,42 +56,38 @@ package com.company;
  *  problem (logging requests in a file) by using the Proxy pattern
  */
 
-public class Main {
-
+ public class Main {
     public static void main(String[] args) {
+        // Create the WebServer
         WebServer webServer = new WebServer();
-        FileLogger fileLogger = new FileLogger('logs.txt');
 
+        // Attach the FileLogger as an observer
+        FileLogger fileLogger = new FileLogger("logs.txt");
+        webServer.attach(fileLogger);
+
+        // Create the handlers and chain them together
+        RequestHandler existingContentHandler = new ExistingContentCheckRequestHandler();
+        RequestHandler policyHandler = new PolicyCheckRequestHandler();
+        RequestHandler renderHandler = new RenderContentHandler();
+
+        existingContentHandler.setSuccessor(policyHandler);
+        policyHandler.setSuccessor(renderHandler);
+
+        // Set the chain's starting point in the WebServer
+        webServer.setHandler(existingContentHandler);
+
+        // Create users
         User regularUser = new User(false);
         User adminUser = new User(true);
 
-        /**
-         * Expected output :
-         * Status 403 : user is not authorized to access this content
-         */
-        webServer.getRequest(new WebRequest("/dashboard", regularUser));
+        // Process requests
+        webServer.getRequest(new WebRequest("/dashboard", regularUser)); // Expected: 403
+        webServer.getRequest(new WebRequest("/dashboard/nonExistingPage", adminUser)); // Expected: 404
+        webServer.getRequest(new WebRequest("/dashboard", adminUser)); // Expected: 200
+        webServer.getRequest(new WebRequest("/home", regularUser)); // Expected: 200
 
         /**
-         * Expected output :
-         * Status 404 : Page missing
-         */
-        webServer.getRequest(new WebRequest("/dashboard/nonExistingPage", adminUser));
-
-        /**
-         * Expected output :
-         * Status 200 : Dashboard content here
-         */
-        webServer.getRequest(new WebRequest(("/dashboard", adminUser));
-
-        /**
-         * Expected output :
-         * Status 200 : Home content here
-         */
-        webServer.getRequest(new WebRequest("/home", regularUser));
-
-        /**
-         * Expected content of file logs.txt
-         *
+         * Expected content of logs.txt:
          * Request made to /dashboard by non admin user
          * Request made to /dashboard/nonExistingPage by admin user
          * Request made to /dashboard by admin user
