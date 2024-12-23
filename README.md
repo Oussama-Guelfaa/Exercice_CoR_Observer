@@ -1,4 +1,4 @@
-```markdown
+
 # TP Design Patterns: Chain of Responsibility, Observer, and Proxy
 
 ## Table of Contents
